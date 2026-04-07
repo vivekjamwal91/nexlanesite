@@ -1,0 +1,2121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexlane Studio — On-Demand Webflow Execution</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0a0a0a;
+        --bg2: #111111;
+        --bg3: #181818;
+        --border: rgba(255, 255, 255, 0.08);
+        --border-hover: rgba(255, 255, 255, 0.16);
+        --text: #f0ede8;
+        --muted: #888680;
+        --muted2: #555350;
+        --accent: #e8d5b0;
+        --accent2: #c9a96e;
+        --green: #4ade80;
+        --serif: "Instrument Serif", serif;
+        --sans: "DM Sans", sans-serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 2.5rem;
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-logo {
+        font-family: var(--serif);
+        font-size: 1.2rem;
+        color: var(--accent);
+        letter-spacing: 0.02em;
+      }
+      .nav-cta {
+        background: var(--accent);
+        color: #0a0a0a;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 0.5rem 1.25rem;
+        border-radius: 100px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .nav-cta:hover {
+        opacity: 0.85;
+      }
+
+      /* SECTIONS */
+      section {
+        padding: 7rem 2.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .full-width {
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      /* LABELS */
+      .label {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent2);
+        margin-bottom: 1.25rem;
+        padding: 0.3rem 0.75rem;
+        border: 1px solid rgba(201, 169, 110, 0.25);
+        border-radius: 100px;
+      }
+
+      /* HERO */
+      #hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 8rem;
+        padding-bottom: 5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        mask-image: radial-gradient(
+          ellipse at center,
+          black 30%,
+          transparent 80%
+        );
+      }
+      .hero-glow {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(232, 213, 176, 0.06) 0%,
+          transparent 70%
+        );
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%);
+        pointer-events: none;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(74, 222, 128, 0.08);
+        border: 1px solid rgba(74, 222, 128, 0.2);
+        border-radius: 100px;
+        padding: 0.35rem 0.9rem;
+        font-size: 12px;
+        color: var(--green);
+        margin-bottom: 2rem;
+      }
+      .hero-badge-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--green);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      h1 {
+        font-family: var(--serif);
+        font-size: clamp(3rem, 7vw, 5.5rem);
+        line-height: 1.08;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        max-width: 800px;
+      }
+      h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .hero-sub {
+        font-size: 1.15rem;
+        color: var(--muted);
+        max-width: 540px;
+        margin-bottom: 2.5rem;
+        line-height: 1.7;
+      }
+      .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #0a0a0a;
+        font-size: 15px;
+        font-weight: 500;
+        padding: 0.85rem 2rem;
+        border-radius: 100px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        display: inline-block;
+      }
+      .btn-primary:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        font-size: 14px;
+        color: var(--muted);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.2s;
+      }
+      .btn-ghost:hover {
+        color: var(--text);
+      }
+      .fiverr-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(29, 191, 115, 0.06);
+        border: 1px solid rgba(29, 191, 115, 0.2);
+        border-radius: 100px;
+        padding: 0.5rem 1rem 0.5rem 0.75rem;
+        text-decoration: none;
+        margin-top: 2.5rem;
+        margin-bottom: 0.5rem;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+        width: fit-content;
+      }
+      .fiverr-badge:hover {
+        background: rgba(29, 191, 115, 0.1);
+        border-color: rgba(29, 191, 115, 0.35);
+      }
+      .fiverr-stars {
+        font-size: 13px;
+        color: #1dbf73;
+        letter-spacing: 1px;
+      }
+      .fiverr-text {
+        font-size: 13px;
+        color: rgba(240, 237, 232, 0.7);
+      }
+
+      .hero-stat-row {
+        display: flex;
+        gap: 2.5rem;
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+        flex-wrap: wrap;
+      }
+      .hero-stat-value {
+        font-family: var(--serif);
+        font-size: 2rem;
+        color: var(--text);
+        line-height: 1;
+        margin-bottom: 0.25rem;
+      }
+      .hero-stat-label {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* SECTION HEADERS */
+      h2 {
+        font-family: var(--serif);
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.15;
+        color: var(--text);
+        margin-bottom: 1rem;
+      }
+      h2 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .section-sub {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 520px;
+        margin-bottom: 3.5rem;
+        line-height: 1.7;
+      }
+
+      /* WHAT WE DO */
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .service-card {
+        background: var(--bg);
+        padding: 2rem;
+        transition: background 0.2s;
+      }
+      .service-card:hover {
+        background: var(--bg3);
+      }
+      .service-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(232, 213, 176, 0.08);
+        border: 1px solid rgba(232, 213, 176, 0.15);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        margin-bottom: 1.25rem;
+      }
+      .service-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+      .service-desc {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* SALARY COMPARISON */
+      .salary-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+        margin-top: 3rem;
+      }
+      .salary-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem;
+      }
+      @media (max-width: 768px) {
+        .salary-card {
+          padding: 1.75rem 1.25rem;
+        }
+        .salary-row {
+          flex-wrap: nowrap;
+          gap: 8px;
+        }
+        .salary-logo {
+          font-size: 15px;
+          flex-shrink: 0;
+        }
+        .salary-range {
+          font-size: 14px;
+          white-space: nowrap;
+        }
+      }
+      .salary-card-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--text);
+        text-align: center;
+        line-height: 1.4;
+        margin-bottom: 1.5rem;
+        font-family: var(--sans);
+      }
+      .salary-divider {
+        height: 1px;
+        background: var(--border);
+        margin-bottom: 1.5rem;
+      }
+      .salary-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.9rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .salary-row:last-of-type {
+        border-bottom: none;
+      }
+      .salary-logo {
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+        font-size: 17px;
+      }
+      .glassdoor .gd-g {
+        color: #0caa41;
+        font-size: 19px;
+      }
+      .glassdoor .gd-rest {
+        color: #0caa41;
+      }
+      .indeed .in-dot {
+        color: #6b9fff;
+        font-style: italic;
+        font-size: 19px;
+      }
+      .indeed .in-rest {
+        color: #6b9fff;
+      }
+      .salarycom .sal-bold {
+        color: #6b9fff;
+        font-weight: 900;
+      }
+      .salarycom .sal-dot {
+        color: #e8392a;
+        font-size: 22px;
+        line-height: 0;
+        vertical-align: middle;
+      }
+      .salarycom .sal-com {
+        color: #6b9fff;
+        font-size: 13px;
+      }
+      .salarycom .sal-reg {
+        color: #6b9fff;
+        font-size: 10px;
+        vertical-align: super;
+      }
+      .salary-range {
+        font-size: 15px;
+        color: var(--text);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .salary-info {
+        font-size: 12px;
+        color: var(--muted2);
+        cursor: help;
+      }
+      .salary-total {
+        margin-top: 1.25rem;
+        padding: 1rem 1.25rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .salary-total strong {
+        color: var(--text);
+      }
+
+      .vs-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .vs-badge {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--bg3);
+        border: 1px solid var(--border-hover);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 500;
+        letter-spacing: 0.05em;
+      }
+
+      .nexlane-cost-card {
+        background: var(--bg3);
+        border: 1px solid rgba(232, 213, 176, 0.25);
+        border-radius: 20px;
+        padding: 2.5rem;
+      }
+      .nexlane-cost-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        margin-bottom: 1rem;
+      }
+      .nexlane-cost-price {
+        font-family: var(--serif);
+        font-size: 3.5rem;
+        color: var(--accent);
+        line-height: 1;
+        margin-bottom: 0.25rem;
+      }
+      .nexlane-cost-price span {
+        font-size: 1.1rem;
+        color: var(--muted);
+        font-family: var(--sans);
+      }
+      .nexlane-cost-annual {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 1.25rem;
+      }
+      .nexlane-savings-pill {
+        display: inline-block;
+        background: rgba(74, 222, 128, 0.08);
+        border: 1px solid rgba(74, 222, 128, 0.2);
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 0.3rem 0.85rem;
+        border-radius: 100px;
+        margin-bottom: 1.5rem;
+      }
+      .nexlane-perks {
+        list-style: none;
+      }
+      .nexlane-perks li {
+        font-size: 13px;
+        color: var(--muted);
+        padding: 0.4rem 0;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .nexlane-perks li:last-child {
+        border-bottom: none;
+      }
+      .nexlane-perks li::before {
+        content: "✓";
+        color: var(--green);
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 768px) {
+        .salary-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* WHY SUBSCRIPTION */
+      #subscription {
+        background: var(--bg2);
+        max-width: none;
+      }
+      #subscription > .inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2.5rem;
+      }
+      .cost-compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .cost-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        position: relative;
+      }
+      .cost-card.featured {
+        border-color: rgba(232, 213, 176, 0.3);
+        background: rgba(232, 213, 176, 0.04);
+      }
+      .cost-card.featured::before {
+        content: "Best Value";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: #0a0a0a;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 0.2rem 0.75rem;
+        border-radius: 100px;
+        white-space: nowrap;
+      }
+      .cost-type {
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 1rem;
+      }
+      .cost-amount {
+        font-family: var(--serif);
+        font-size: 2.5rem;
+        color: var(--text);
+        line-height: 1;
+        margin-bottom: 0.25rem;
+      }
+      .cost-amount.accent {
+        color: var(--accent);
+      }
+      .cost-period {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
+      .cost-items {
+        list-style: none;
+      }
+      .cost-items li {
+        font-size: 13px;
+        color: var(--muted);
+        padding: 0.4rem 0;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .cost-items li:last-child {
+        border-bottom: none;
+      }
+      .cost-items li::before {
+        content: "×";
+        color: #ef4444;
+        font-size: 12px;
+      }
+      .cost-items.good li::before {
+        content: "✓";
+        color: var(--green);
+      }
+      .cost-saving {
+        margin-top: 2rem;
+        padding: 1.25rem 1.5rem;
+        background: rgba(74, 222, 128, 0.06);
+        border: 1px solid rgba(74, 222, 128, 0.15);
+        border-radius: 12px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--green);
+      }
+      .cost-saving strong {
+        font-size: 1.5rem;
+        font-family: var(--serif);
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+
+      /* BENEFITS */
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+      }
+      .benefit-card {
+        padding: 1.75rem;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .benefit-card:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+      }
+      .benefit-num {
+        font-family: var(--serif);
+        font-size: 2.5rem;
+        color: rgba(232, 213, 176, 0.15);
+        line-height: 1;
+        margin-bottom: 0.75rem;
+      }
+      .benefit-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+      .benefit-desc {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      /* PROCESS */
+      #process {
+        background: var(--bg2);
+        max-width: none;
+      }
+      #process > .inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2.5rem;
+      }
+      .process-steps {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0;
+        margin-top: 3rem;
+        position: relative;
+      }
+      .process-steps::before {
+        content: "";
+        position: absolute;
+        top: 28px;
+        left: calc(16.66% + 28px);
+        right: calc(16.66% + 28px);
+        height: 1px;
+        background: linear-gradient(90deg, var(--accent2), var(--accent2));
+        opacity: 0.3;
+      }
+      .process-step {
+        text-align: center;
+        padding: 0 2rem;
+      }
+      .process-num {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--bg3);
+        border: 1px solid var(--border-hover);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-family: var(--serif);
+        font-size: 1.4rem;
+        color: var(--accent);
+      }
+      .process-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.75rem;
+      }
+      .process-desc {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+      .process-time {
+        display: inline-block;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 11px;
+        color: var(--accent2);
+        border: 1px solid rgba(201, 169, 110, 0.2);
+        border-radius: 100px;
+        padding: 0.2rem 0.6rem;
+      }
+
+      /* GALLERY */
+      .gallery-wrap {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+      }
+      .gallery-track {
+        display: flex;
+        width: 100%;
+        transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .gallery-slide {
+        width: 100%;
+        flex: 0 0 100%;
+        aspect-ratio: 127/64;
+        background: var(--bg3);
+        overflow: hidden;
+      }
+      .gallery-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      @media (max-width: 768px) {
+        .gallery-slide {
+          aspect-ratio: 127/64;
+        }
+      }
+      .gallery-placeholder {
+        text-align: center;
+      }
+      .gallery-icon {
+        font-size: 40px;
+        opacity: 0.2;
+        margin-bottom: 0.75rem;
+      }
+      .gallery-placeholder p {
+        font-size: 13px;
+        color: var(--muted2);
+      }
+      .gallery-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(10, 10, 10, 0.7);
+        border: 1px solid var(--border-hover);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          opacity 0.2s;
+        z-index: 10;
+        backdrop-filter: blur(8px);
+      }
+      .gallery-arrow:hover {
+        background: rgba(232, 213, 176, 0.1);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .gallery-arrow:disabled {
+        opacity: 0.25;
+        cursor: default;
+      }
+      .gallery-prev {
+        left: 1rem;
+      }
+      .gallery-next {
+        right: 1rem;
+      }
+      .gallery-dots {
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+        z-index: 10;
+      }
+      .gallery-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .gallery-dot.active {
+        background: var(--accent);
+        transform: scale(1.3);
+      }
+
+      /* WORK */
+      .work-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+      .work-item {
+        aspect-ratio: 16/10;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted2);
+        font-size: 13px;
+        transition: border-color 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+      .work-item:hover {
+        border-color: var(--border-hover);
+      }
+      .work-item:first-child {
+        grid-column: span 2;
+      }
+      .work-placeholder {
+        text-align: center;
+      }
+      .work-placeholder p {
+        font-size: 12px;
+        color: var(--muted2);
+        margin-top: 0.5rem;
+      }
+
+      /* TESTIMONIALS */
+      #testimonials {
+        background: var(--bg2);
+        max-width: none;
+      }
+      #testimonials > .inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2.5rem;
+      }
+      .testimonial-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .testimonial-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.75rem;
+      }
+      .stars {
+        color: var(--accent2);
+        font-size: 14px;
+        margin-bottom: 1rem;
+        letter-spacing: 2px;
+      }
+      .testimonial-text {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        font-style: italic;
+      }
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .author-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(232, 213, 176, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--accent);
+      }
+      .author-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .author-role {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .verified-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 1.25rem;
+        background: rgba(74, 222, 128, 0.06);
+        border: 1px solid rgba(74, 222, 128, 0.15);
+        border-radius: 100px;
+        padding: 0.4rem 1rem;
+        font-size: 12px;
+        color: var(--green);
+      }
+      .verified-badge::before {
+        content: "✓";
+        color: var(--green);
+        font-size: 12px;
+      }
+
+      /* FAQ */
+      .faq-list {
+        margin-top: 2.5rem;
+      }
+      .faq-item {
+        border-bottom: 1px solid var(--border);
+      }
+      .faq-q {
+        width: 100%;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 15px;
+        font-weight: 500;
+        text-align: left;
+        padding: 1.5rem 0;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        transition: color 0.2s;
+      }
+      .faq-q:hover {
+        color: var(--accent);
+      }
+      .faq-icon {
+        font-size: 20px;
+        color: var(--muted);
+        flex-shrink: 0;
+        transition: transform 0.2s;
+      }
+      .faq-a {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.7;
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.3s ease,
+          padding 0.3s;
+      }
+      .faq-item.open .faq-a {
+        max-height: 300px;
+        padding-bottom: 1.5rem;
+      }
+      .faq-item.open .faq-icon {
+        transform: rotate(45deg);
+      }
+
+      /* SINGLE PRICING CARD */
+      .single-pricing-wrap {
+        margin-top: 3rem;
+      }
+      .single-pricing-card {
+        background: var(--bg3);
+        border: 1px solid rgba(232, 213, 176, 0.2);
+        border-radius: 20px;
+        padding: 2.5rem;
+      }
+      .single-pricing-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .single-plan-name {
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+      .single-plan-desc {
+        font-size: 14px;
+        color: var(--muted);
+        max-width: 560px;
+        line-height: 1.65;
+      }
+      .single-best-badge {
+        flex-shrink: 0;
+        background: transparent;
+        border: 1px solid var(--border-hover);
+        color: var(--text);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 0.4rem 1rem;
+        border-radius: 100px;
+        white-space: nowrap;
+      }
+      .single-pricing-mid {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 1.75rem 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+      }
+      .single-plan-price {
+        font-family: var(--serif);
+        font-size: 4rem;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .single-plan-period {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 0.25rem;
+      }
+      .single-billed {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .single-included-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--muted);
+        margin-bottom: 1.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .single-features-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        margin-bottom: 2rem;
+      }
+      .single-feature {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--muted);
+        padding: 0.65rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .single-feature:nth-last-child(-n + 2) {
+        border-bottom: none;
+      }
+      .sf-check {
+        color: var(--green);
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .single-plan-cta {
+        display: block;
+        width: 100%;
+        text-align: center;
+        background: var(--accent);
+        color: #0a0a0a;
+        font-size: 15px;
+        font-weight: 500;
+        padding: 1rem;
+        border-radius: 100px;
+        text-decoration: none;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+      .single-plan-cta:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+
+      @media (max-width: 600px) {
+        .single-features-grid {
+          grid-template-columns: 1fr;
+        }
+        .single-feature:nth-last-child(-n + 2) {
+          border-bottom: 1px solid var(--border);
+        }
+        .single-feature:last-child {
+          border-bottom: none;
+        }
+        .single-pricing-top {
+          flex-direction: column;
+        }
+      }
+
+      /* PRICING */
+      #pricing {
+        background: var(--bg2);
+        max-width: none;
+      }
+      #pricing > .inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2.5rem;
+      }
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .pricing-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        position: relative;
+      }
+      .pricing-card.featured {
+        border-color: rgba(232, 213, 176, 0.35);
+        background: rgba(232, 213, 176, 0.03);
+      }
+      .pricing-card.featured::before {
+        content: "Most Popular";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: #0a0a0a;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 0.2rem 0.75rem;
+        border-radius: 100px;
+        white-space: nowrap;
+      }
+      .plan-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 1rem;
+      }
+      .plan-price {
+        font-family: var(--serif);
+        font-size: 3rem;
+        color: var(--text);
+        line-height: 1;
+        margin-bottom: 0.25rem;
+      }
+      .plan-price span {
+        font-size: 1.1rem;
+        color: var(--muted);
+      }
+      .plan-desc {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 2rem;
+        line-height: 1.5;
+      }
+      .plan-features {
+        list-style: none;
+        margin-bottom: 2rem;
+      }
+      .plan-features li {
+        font-size: 13px;
+        color: var(--muted);
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+      .plan-features li:last-child {
+        border-bottom: none;
+      }
+      .plan-features li::before {
+        content: "✓";
+        color: var(--green);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .plan-cta {
+        display: block;
+        text-align: center;
+        padding: 0.85rem;
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        width: 100%;
+      }
+      .plan-cta.outline {
+        background: transparent;
+        border: 1px solid var(--border-hover);
+        color: var(--text);
+      }
+      .plan-cta.outline:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .plan-cta.solid {
+        background: var(--accent);
+        color: #0a0a0a;
+      }
+      .plan-cta.solid:hover {
+        opacity: 0.88;
+      }
+      .pricing-note {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* FINAL CTA */
+      #cta {
+        text-align: center;
+        padding: 8rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-glow {
+        position: absolute;
+        width: 500px;
+        height: 300px;
+        background: radial-gradient(
+          ellipse,
+          rgba(232, 213, 176, 0.06) 0%,
+          transparent 70%
+        );
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      #cta h2 {
+        max-width: 640px;
+        margin: 0 auto 1rem;
+        font-size: clamp(2.2rem, 4vw, 3.5rem);
+      }
+      #cta .section-sub {
+        margin: 0 auto 2.5rem;
+      }
+      .guarantee-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(74, 222, 128, 0.06);
+        border: 1px solid rgba(74, 222, 128, 0.15);
+        border-radius: 100px;
+        padding: 0.5rem 1.25rem;
+        font-size: 13px;
+        color: var(--green);
+        margin-top: 2rem;
+      }
+
+      /* FOOTER */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 2rem 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .footer-logo {
+        font-family: var(--serif);
+        color: var(--accent);
+        font-size: 1.1rem;
+      }
+      .footer-copy {
+        font-size: 12px;
+        color: var(--muted2);
+      }
+
+      /* ANIMATIONS */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        nav {
+          padding: 1rem 1.25rem;
+        }
+        section {
+          padding: 4rem 1.25rem;
+        }
+        .cost-compare,
+        .process-steps,
+        .testimonial-grid,
+        .pricing-grid {
+          grid-template-columns: 1fr;
+        }
+        .work-grid {
+          grid-template-columns: 1fr;
+        }
+        .work-item:first-child {
+          grid-column: span 1;
+        }
+        .process-steps::before {
+          display: none;
+        }
+        h1 {
+          font-size: 2.5rem;
+        }
+        .hero-stat-row {
+          gap: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <a href="#" class="nav-logo" style="text-decoration:none;color:inherit;">Nexlane Studio</a>
+      <a href="#cta" class="nav-cta">Book a Call</a>
+    </nav>
+
+    <!-- SECTION 1: HERO -->
+    <section id="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+      <div class="hero-content fade-up">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Now accepting new clients — 2 spots left
+        </div>
+        <h1>Your marketing team,<br /><em>finally unblocked.</em></h1>
+        <p class="hero-sub">
+          On-demand Webflow execution for B2B SaaS teams. Landing pages, site
+          updates, A/B tests — live in 48 hours. No dev tickets. No agencies. No
+          waiting.
+        </p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn-primary">Book a Call</a>
+          <a href="#subscription" class="btn-ghost">Do the math →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: USE CASES -->
+    <section id="use-cases">
+      <div class="label">Use cases</div>
+      <h2>Everything your company<br />needs to <em>move fast</em></h2>
+      <p class="section-sub">
+        We handle your entire Webflow execution — so your team stops briefing
+        developers and starts launching campaigns.
+      </p>
+      <div class="services-grid fade-up">
+        <div class="service-card">
+          <div class="service-icon">⚡</div>
+          <div class="service-title">Landing Pages</div>
+          <div class="service-desc">
+            Campaign-ready, conversion-optimised landing pages built and shipped
+            in 48–72 hours. Brief us. It goes live.
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📝</div>
+          <div class="service-title">Blog & Content Posts</div>
+          <div class="service-desc">
+            Blog posts, case studies, and product updates published to your site
+            — no more content sitting in a Google Doc.
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📈</div>
+          <div class="service-title">CRO Improvements</div>
+          <div class="service-desc">
+            Data-informed tweaks to improve conversions — headlines, CTAs,
+            layout, page flow. Your site compounds over time.
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔄</div>
+          <div class="service-title">Site Updates</div>
+          <div class="service-desc">
+            Copy changes, component edits, section refreshes — handled
+            continuously with zero dev involvement.
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🧪</div>
+          <div class="service-title">A/B Testing</div>
+          <div class="service-desc">
+            We build and implement test variants fast — so you're running
+            experiments every week, not every quarter.
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🎯</div>
+          <div class="service-title">Ad Landing Pages</div>
+          <div class="service-desc">
+            Stop sending paid traffic to your homepage. We build dedicated,
+            high-converting pages for every campaign.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: WHY SUBSCRIPTION -->
+    <section id="subscription" class="full-width" style="padding: 7rem 0">
+      <div class="inner">
+        <div class="label">Do the math</div>
+        <h2>Cheaper than hiring.<br /><em>Faster than agencies.</em></h2>
+        <p class="section-sub">
+          Hiring a full-time Webflow developer in the US costs $80K–$120K per
+          year — before benefits, taxes, and the 3-month hiring cycle. We give
+          you the same execution for 1/4th price.
+        </p>
+
+        <div class="salary-layout fade-up">
+          <!-- Left: Salary card dark -->
+          <div class="salary-card">
+            <div class="salary-card-title">
+              Hiring a Webflow developer in the US
+            </div>
+            <div class="salary-divider"></div>
+            <div class="salary-row">
+              <div class="salary-logo glassdoor">
+                <span class="gd-g">g</span><span class="gd-rest">lassdoor</span>
+              </div>
+              <div class="salary-range">
+                $80k – $120k
+                <span class="salary-info" title="Source: Glassdoor">ⓘ</span>
+              </div>
+            </div>
+            <div class="salary-row">
+              <div class="salary-logo indeed">
+                <span class="in-dot">i</span><span class="in-rest">ndeed</span>
+              </div>
+              <div class="salary-range">
+                $75k – $110k
+                <span class="salary-info" title="Source: Indeed">ⓘ</span>
+              </div>
+            </div>
+            <div class="salary-row">
+              <div class="salary-logo salarycom">
+                <span class="sal-bold">salary</span
+                ><span class="sal-dot">.</span><span class="sal-com">com</span
+                ><span class="sal-reg">®</span>
+              </div>
+              <div class="salary-range">
+                $75k – $120k
+                <span class="salary-info" title="Source: Salary.com">ⓘ</span>
+              </div>
+            </div>
+            <div class="salary-total">
+              Average cost: <strong>$80K – $120K/year</strong> + benefits, taxes
+              & hiring overhead
+            </div>
+          </div>
+
+          <!-- Right: Nexlane card -->
+          <div class="nexlane-cost-card">
+            <div class="nexlane-cost-label">Nexlane Studio retainer</div>
+
+            <div class="nexlane-savings-pill">Contact for pricing</div>
+            <ul class="nexlane-perks">
+              <li>1 Webflow developer</li>
+              <li>1 UI/UX Designer</li>
+              <li>1 Project Manager</li>
+              <li>Landing pages</li>
+              <li>Blog posts & content publishing</li>
+              <li>Ongoing site updates</li>
+              <li>A/B test implementation</li>
+              <li>CRO improvements</li>
+
+              <li>30-day money-back guarantee</li>
+            </ul>
+            <a
+              href="#cta"
+              class="btn-primary"
+              style="display: block; text-align: center; margin-top: 1.75rem"
+              >Book a call</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: BENEFITS -->
+    <section id="benefits">
+      <div class="label">Why teams choose us</div>
+      <h2>Built for teams that<br /><em>refuse to wait</em></h2>
+      <p class="section-sub">
+        Every feature of how we work is designed around one outcome: your
+        marketing team ships faster.
+      </p>
+      <div class="benefits-grid fade-up">
+        <div class="benefit-card">
+          <div class="benefit-num">01</div>
+          <div class="benefit-title">No dev dependency, ever</div>
+          <div class="benefit-desc">
+            Your marketing team stops relying on engineering for website work.
+            Brief us directly. We handle it.
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">02</div>
+          <div class="benefit-title">48-hour page delivery</div>
+          <div class="benefit-desc">
+            Most pages go live within 48 hours of briefing. Not next sprint. Not
+            next week. This week.
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">03</div>
+          <div class="benefit-title">Unlimited requests</div>
+          <div class="benefit-desc">
+            Submit as many requests as your team needs. No per-project pricing.
+            No approval loops. Just execution.
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">04</div>
+          <div class="benefit-title">SaaS-native execution</div>
+          <div class="benefit-desc">
+            We understand B2B SaaS marketing. Campaign velocity, CRO, A/B
+            testing — we speak your language.
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">05</div>
+          <div class="benefit-title">Flat monthly retainer</div>
+          <div class="benefit-desc">
+            Predictable cost. No surprise invoices. No SOWs. One price, full
+            execution, cancel anytime.
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">06</div>
+          <div class="benefit-title">Risk-free guarantee</div>
+          <div class="benefit-desc">
+            If you don't ship faster in 30 days, you don't pay. We keep working
+            until you're fully unblocked.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: PROCESS -->
+    <section id="process" class="full-width" style="padding: 7rem 0">
+      <div class="inner">
+        <div class="label">How it works</div>
+        <h2>Simple as<br /><em>one, two, three</em></h2>
+        <p class="section-sub">
+          No onboarding maze. No 6-week kickoff. We plug in fast and start
+          shipping.
+        </p>
+        <div class="process-steps fade-up">
+          <div class="process-step">
+            <div class="process-num">1</div>
+            <div class="process-title">Subscribe</div>
+            <div class="process-desc">
+              Pick your plan. We onboard within 24 hours — access, brand
+              guidelines, workflow alignment. Done.
+            </div>
+            <span class="process-time">Day 1</span>
+          </div>
+          <div class="process-step">
+            <div class="process-num">2</div>
+            <div class="process-title">Request</div>
+            <div class="process-desc">
+              Submit a brief via a simple async form. Landing page, blog post,
+              site update — whatever your team needs next.
+            </div>
+            <span class="process-time">Anytime</span>
+          </div>
+          <div class="process-step">
+            <div class="process-num">3</div>
+            <div class="process-title">Receive</div>
+            <div class="process-desc">
+              We build, review, and ship. Most deliverables go live within 48
+              hours. You review, we revise, it's done.
+            </div>
+            <span class="process-time">Within 48h</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: OUR WORK -->
+    <section id="work">
+      <div class="label">Our work</div>
+      <h2>Built in Webflow.<br /><em>Shipped fast.</em></h2>
+      <p class="section-sub">
+        We helped myhalo.ai go from zero campaign pages to 4 live landing pages
+        with A/B tests running — in one month.
+      </p>
+
+      <div class="gallery-wrap">
+        <div class="gallery-track" id="galleryTrack">
+          <div class="gallery-slide">
+            <img src="images/slide1.png" alt="Project slide 1" />
+          </div>
+          <div class="gallery-slide">
+            <img src="images/slide2.png" alt="Project slide 2" />
+          </div>
+          <div class="gallery-slide">
+            <img src="images/slide3.png" alt="Project slide 3" />
+          </div>
+          <div class="gallery-slide">
+            <img src="images/slide4.png" alt="Project slide 4" />
+          </div>
+        </div>
+
+        <!-- Arrows -->
+        <button
+          class="gallery-arrow gallery-prev"
+          id="galleryPrev"
+          aria-label="Previous"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M15 18l-6-6 6-6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <button
+          class="gallery-arrow gallery-next"
+          id="galleryNext"
+          aria-label="Next"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M9 18l6-6-6-6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
+        <!-- Dots -->
+        <div class="gallery-dots" id="galleryDots"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: TESTIMONIALS -->
+    <section id="testimonials" class="full-width" style="padding: 7rem 0">
+      <div class="inner">
+        <div class="label">What clients say</div>
+        <h2>Don't take<br /><em>our word for it</em></h2>
+        <div class="testimonial-grid fade-up">
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">
+              "Vivek is a professional who remains very engaged and gets things
+              done timely and efficiently. We solved some problems we needed
+              right before the launch of our website. Extremely thankful for his
+              services!"
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">TK</div>
+              <div>
+                <div class="author-name">Travis Kelley</div>
+                <div class="author-role">COO at Intellibus</div>
+              </div>
+            </div>
+            <div class="verified-badge">Verified review</div>
+          </div>
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">
+              "This is the 2nd time I worked with Vivek, and he is a very
+              professional developer who helped us revamp our Webflow website
+              thoroughly. He is very responsive, has always delivered on time
+              and is keen to do the extra mile when needed. I would highly
+              recommend working with Vivek!"
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">AA</div>
+              <div>
+                <div class="author-name">Anais</div>
+                <div class="author-role">VP Marketing at Fairmat</div>
+              </div>
+            </div>
+            <div class="verified-badge">Verified review</div>
+          </div>
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">
+              "It was absolutely amazing working with Vivek. He is great at what
+              he does. The process was super smooth and he has a great work
+              ethic. I would absolutely recommend Vivek to the next client. I'm
+              so proud of how the site has come up :)"
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">DK</div>
+              <div>
+                <div class="author-name">Devika Khandelwal</div>
+                <div class="author-role">CMO at Senseai.ai</div>
+              </div>
+            </div>
+            <div class="verified-badge">Verified review</div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: center; margin-top: 2.5rem">
+          <a
+            href="https://www.fiverr.com/smartypaints"
+            target="_blank"
+            rel="noopener"
+            class="fiverr-badge"
+          >
+            <svg
+              width="52"
+              height="16"
+              viewBox="0 0 52 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <text
+                x="0"
+                y="13"
+                font-family="Arial, sans-serif"
+                font-size="14"
+                font-weight="700"
+                fill="#ffffff"
+                letter-spacing="-0.3"
+              >
+                fiverr
+              </text>
+              <circle cx="49" cy="9" r="3" fill="#1DBF73" />
+            </svg>
+            <div class="fiverr-stars">★★★★★</div>
+            <div class="fiverr-text">5.0 rated on Fiverr</div>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              style="flex-shrink: 0"
+            >
+              <path
+                d="M7 17L17 7M17 7H7M17 7V17"
+                stroke="#1DBF73"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: FAQ -->
+    <section id="faq">
+      <div class="label">FAQ</div>
+      <h2>Questions we<br /><em>always get asked</em></h2>
+      <div class="faq-list fade-up">
+        <div class="faq-item open">
+          <button class="faq-q">
+            Do you only work with Webflow sites? <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Yes — we specialise exclusively in Webflow. This means faster
+            execution, better quality, and no generalist learning curve. If your
+            site is on WordPress or another platform, we can discuss a
+            migration.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            How do I submit requests? <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Through a simple async brief form we set up during onboarding. No
+            calls needed for routine requests. Just fill in what you need, when
+            you need it, and we handle the rest.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            How many requests can I submit per month?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Unlimited. We work through your queue continuously. The only
+            variable is how many active tasks we handle simultaneously —
+            typically 1–2 at a time, so requests are completed fast rather than
+            spread thin.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            What if I'm not happy with the work? <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            We revise until you're satisfied — included in your retainer. If you
+            don't experience faster execution within 30 days, we refund your
+            first month in full. No questions asked.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            How quickly can we get started? <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Same week. Once you book a call and we confirm fit, onboarding takes
+            24 hours. Your first deliverable goes live within 48 hours of your
+            first brief.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            Can I cancel anytime? <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Yes. No long-term contracts. Cancel with 30 days notice. We're
+            confident you'll stay because the results speak for themselves — but
+            we'll never lock you in.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            Do you do design as well or just development?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Both. We handle UI/UX design and Webflow development together. Every
+            deliverable is designed for conversion, not just built to spec.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: PRICING -->
+    <section id="pricing" class="full-width" style="padding: 7rem 0">
+      <div class="inner">
+        <div class="label">Pricing</div>
+        <h2>Transparent, <em>easy-to-understand pricing</em></h2>
+        <p class="section-sub">One plan. Full execution. No surprises.</p>
+
+        <div class="single-pricing-wrap fade-up">
+          <div class="single-pricing-card">
+            <div class="single-pricing-top">
+              <div>
+                <div class="single-plan-name">On-Demand Webflow Execution</div>
+                <div class="single-plan-desc">
+                  Your dedicated Webflow team for landing pages, site updates,
+                  A/B tests, and everything in between — on demand, every month.
+                </div>
+              </div>
+              <div class="nexlane-savings-pill">Contact for pricing</div>
+            </div>
+
+            <div class="single-included-label">What's included?</div>
+
+            <div class="single-features-grid">
+              <div class="single-feature">
+                <span class="sf-check">✓</span> 1 Webflow Developer
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> 1 UI/UX Designer
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> 1 Project Manager
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> Landing pages
+              </div>
+
+              <div class="single-feature">
+                <span class="sf-check">✓</span> Blog & content publishing
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> Flexible — cancel anytime
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> 48-hour page delivery
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> Direct async collaboration
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> A/B test implementation
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> Unlimited revisions
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> CRO improvements
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> 30-day money-back guarantee
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> Ongoing site updates
+              </div>
+              <div class="single-feature">
+                <span class="sf-check">✓</span> Priority support
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="pricing-note">
+          Not sure if it's the right fit?
+          <a href="#cta" style="color: var(--accent); text-decoration: none"
+            >Book a call</a
+          >
+          — no pitch, no pressure.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 10: FINAL CTA -->
+    <section id="cta">
+      <div class="cta-glow"></div>
+      <div style="position: relative">
+        <div class="label">Get started</div>
+        <h2>Your marketing team<br /><em>deserves to move fast</em></h2>
+        <p class="section-sub" style="margin: 0 auto 2.5rem">
+          Book a call. We'll look at your site together, identify the
+          bottlenecks, and tell you exactly how we'd fix them. No pitch. No
+          pressure.
+        </p>
+        <a
+          href="https://calendly.com/vivekjamwal91/detailed-discussion"
+          target="_blank"
+          class="btn-primary"
+          style="font-size: 16px; padding: 1rem 2.5rem"
+          >Book a Call</a
+        >
+        <div>
+          <div class="guarantee-badge">
+            ✓ No-Dev Execution Guarantee — ship faster in 30 days or full refund
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <a href="#" class="footer-logo" style="text-decoration:none;color:inherit;">Nexlane Studio</a>
+      <div class="footer-copy">© 2026 Nexlane Studio. All rights reserved.</div>
+    </footer>
+
+    <script>
+      // FAQ toggle
+      document.querySelectorAll(".faq-q").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const item = btn.parentElement;
+          const isOpen = item.classList.contains("open");
+          document
+            .querySelectorAll(".faq-item")
+            .forEach((i) => i.classList.remove("open"));
+          if (!isOpen) item.classList.add("open");
+        });
+      });
+
+      // Gallery
+      const track = document.getElementById("galleryTrack");
+      const slides = track ? track.querySelectorAll(".gallery-slide") : [];
+      const prev = document.getElementById("galleryPrev");
+      const next = document.getElementById("galleryNext");
+      const dotsWrap = document.getElementById("galleryDots");
+      let current = 0;
+
+      if (slides.length) {
+        // Build dots
+        slides.forEach((_, i) => {
+          const dot = document.createElement("button");
+          dot.className = "gallery-dot" + (i === 0 ? " active" : "");
+          dot.setAttribute("aria-label", "Slide " + (i + 1));
+          dot.addEventListener("click", () => goTo(i));
+          dotsWrap.appendChild(dot);
+        });
+
+        function updateGallery() {
+          const slideWidth = slides[0].offsetWidth;
+          track.style.transform = `translateX(-${current * slideWidth}px)`;
+          dotsWrap.querySelectorAll(".gallery-dot").forEach((d, i) => {
+            d.classList.toggle("active", i === current);
+          });
+          prev.disabled = current === 0;
+          next.disabled = current === slides.length - 1;
+        }
+
+        function goTo(index) {
+          current = Math.max(0, Math.min(index, slides.length - 1));
+          updateGallery();
+        }
+
+        prev.addEventListener("click", () => goTo(current - 1));
+        next.addEventListener("click", () => goTo(current + 1));
+
+        // Swipe support
+        let startX = 0;
+        track.addEventListener(
+          "touchstart",
+          (e) => {
+            startX = e.touches[0].clientX;
+          },
+          { passive: true },
+        );
+        track.addEventListener("touchend", (e) => {
+          const diff = startX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 50) goTo(diff > 0 ? current + 1 : current - 1);
+        });
+
+        updateGallery();
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll(".fade-up")
+        .forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>
